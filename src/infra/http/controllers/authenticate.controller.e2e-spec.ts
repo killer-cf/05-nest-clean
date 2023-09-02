@@ -1,13 +1,14 @@
 import { AppModule } from '@/infra/app.module'
+import { BcryptHasher } from '@/infra/cryptography/bcrypt-hasher'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { hash } from 'bcryptjs'
 import request from 'supertest'
 
 describe('Authenticate (e2e)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let bcryptHasher: BcryptHasher
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -15,6 +16,8 @@ describe('Authenticate (e2e)', () => {
     }).compile()
 
     app = moduleRef.createNestApplication()
+
+    bcryptHasher = new BcryptHasher()
 
     prisma = moduleRef.get(PrismaService)
 
@@ -26,7 +29,7 @@ describe('Authenticate (e2e)', () => {
       data: {
         name: 'jopnh doe',
         email: 'jonh@doe.com',
-        password: await hash('password', 8),
+        password: await bcryptHasher.hash('password'),
       },
     })
 
