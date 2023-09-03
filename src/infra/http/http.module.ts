@@ -8,6 +8,7 @@ import { CreateQuestionUseCase } from '@/domain/forum/aplication/use-cases/creat
 import { ListRecentQuestionsUseCase } from '@/domain/forum/aplication/use-cases/list-recent-questions'
 import { AuthenticateStudentUseCase } from '@/domain/forum/aplication/use-cases/authenticate-student'
 import { CryptographyModule } from '../cryptography/cryptography.module'
+import { RegisterStudentUseCase } from '@/domain/forum/aplication/use-cases/register-student'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -21,6 +22,7 @@ import { CryptographyModule } from '../cryptography/cryptography.module'
     CreateQuestionUseCase,
     ListRecentQuestionsUseCase,
     AuthenticateStudentUseCase,
+    RegisterStudentUseCase,
   ],
 })
 export class HttpModule {}
