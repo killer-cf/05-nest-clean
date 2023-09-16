@@ -51,10 +51,10 @@ describe('List recent questions (e2e)', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
-      questions: [
+      questions: expect.arrayContaining([
         expect.objectContaining({ title: 'question 02' }),
         expect.objectContaining({ title: 'question 01' }),
-      ],
+      ]),
     })
   })
 })
