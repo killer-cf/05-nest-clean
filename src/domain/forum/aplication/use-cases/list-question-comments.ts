@@ -3,6 +3,7 @@ import { QuestionComment } from '../../enterprise/entities/question-comment'
 import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
 import { QuestionsRepository } from '../repositories/questions-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface ListQuestionCommentsUseCaseRequest {
   questionId: string
@@ -16,6 +17,7 @@ type ListQuestionCommentsUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class ListQuestionCommentsUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
