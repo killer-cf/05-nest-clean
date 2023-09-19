@@ -3,6 +3,7 @@ import { AnswerComment } from '../../enterprise/entities/answer-comment'
 import { AnswerCommentsRepository } from '../repositories/answer-comments-repository'
 import { AnswersRepository } from '../repositories/answers-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface ListAnswerCommentsUseCaseRequest {
   answerId: string
@@ -16,6 +17,7 @@ type ListAnswerCommentsUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class ListAnswerCommentsUseCase {
   constructor(
     private answersRepository: AnswersRepository,
@@ -29,6 +31,7 @@ export class ListAnswerCommentsUseCase {
     const answer = await this.answersRepository.findById(answerId)
 
     if (!answer) {
+      console.log('No answer found')
       return left(new ResourceNotFoundError())
     }
 
