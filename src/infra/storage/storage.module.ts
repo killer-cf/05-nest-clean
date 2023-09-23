@@ -5,7 +5,7 @@ import { EnvModule } from '../env/env.module'
 
 @Module({
   imports: [EnvModule],
-  providers: [{ provide: Uploader, useValue: R2Storage }],
+  providers: [{ provide: Uploader, useClass: R2Storage }],
   exports: [Uploader],
 })
 export class StorageModule {}
