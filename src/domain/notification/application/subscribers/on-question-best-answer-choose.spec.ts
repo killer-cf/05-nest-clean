@@ -28,6 +28,8 @@ let sendNotificationExecuteSpy: SpyInstance<
 
 describe('On question best answer choose', () => {
   beforeEach(() => {
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,

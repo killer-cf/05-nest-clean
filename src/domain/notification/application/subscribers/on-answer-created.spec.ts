@@ -28,6 +28,8 @@ let sendNotificationExecuteSpy: SpyInstance<
 
 describe('On answer created', () => {
   beforeEach(() => {
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
