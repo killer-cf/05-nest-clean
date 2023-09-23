@@ -7,6 +7,7 @@ import { AnswerQuestionUseCase } from '@/domain/forum/aplication/use-cases/answe
 
 const answerQuestionBodySchema = z.object({
   content: z.string(),
+  attachmentsIds: z.array(z.string().uuid()),
 })
 
 type AnswerQuestionBodySchema = z.infer<typeof answerQuestionBodySchema>
@@ -23,14 +24,14 @@ export class AnswerQuestionController {
     @CurrentUser() user: UserPayload,
     @Param('questionId') questionId: string,
   ) {
-    const { content } = body
+    const { content, attachmentsIds } = body
     const userId = user.sub
 
     await this.answerQuestion.execute({
       content,
       questionId,
       authorId: userId,
-      attachmentsIds: [],
+      attachmentsIds,
     })
   }
 }

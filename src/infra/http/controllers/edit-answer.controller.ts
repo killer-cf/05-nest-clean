@@ -14,6 +14,7 @@ import { EditAnswerUseCase } from '@/domain/forum/aplication/use-cases/edit-answ
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
+  attachmentsIds: z.array(z.string().uuid()),
 })
 
 type EditAnswerBodySchema = z.infer<typeof editAnswerBodySchema>
@@ -31,14 +32,14 @@ export class EditAnswerController {
     @Param('id') answerId: string,
     @CurrentUser() user: UserPayload,
   ) {
-    const { content } = body
+    const { content, attachmentsIds } = body
     const userId = user.sub
 
     const result = await this.editAnswer.execute({
       content,
       answerId,
       authorId: userId,
-      attachmentsIds: [],
+      attachmentsIds,
     })
 
     if (result.isLeft()) {
