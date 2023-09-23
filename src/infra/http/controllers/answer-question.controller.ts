@@ -7,7 +7,7 @@ import { AnswerQuestionUseCase } from '@/domain/forum/aplication/use-cases/answe
 
 const answerQuestionBodySchema = z.object({
   content: z.string(),
-  attachmentsIds: z.array(z.string().uuid()),
+  attachmentsIds: z.array(z.string().uuid()).default([]),
 })
 
 type AnswerQuestionBodySchema = z.infer<typeof answerQuestionBodySchema>

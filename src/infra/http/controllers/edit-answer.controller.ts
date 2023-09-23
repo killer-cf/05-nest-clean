@@ -14,7 +14,7 @@ import { EditAnswerUseCase } from '@/domain/forum/aplication/use-cases/edit-answ
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
-  attachmentsIds: z.array(z.string().uuid()),
+  attachmentsIds: z.array(z.string().uuid()).default([]),
 })
 
 type EditAnswerBodySchema = z.infer<typeof editAnswerBodySchema>

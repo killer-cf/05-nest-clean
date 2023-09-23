@@ -8,7 +8,7 @@ import { EditQuestionUseCase } from '@/domain/forum/aplication/use-cases/edit-qu
 const editQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
-  attachmentsIds: z.array(z.string().uuid()),
+  attachmentsIds: z.array(z.string().uuid()).default([]),
 })
 
 type EditQuestionBodySchema = z.infer<typeof editQuestionBodySchema>

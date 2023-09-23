@@ -8,7 +8,7 @@ import { CreateQuestionUseCase } from '@/domain/forum/aplication/use-cases/creat
 const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
-  attachmentsIds: z.array(z.string().uuid()),
+  attachmentsIds: z.array(z.string().uuid()).default([]),
 })
 
 type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>
