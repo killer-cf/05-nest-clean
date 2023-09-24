@@ -4,7 +4,10 @@ import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-
 import { makeQuestionComment } from 'test/factories/make-question-comment'
 import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository'
+import { makeStudent } from 'test/factories/make-student'
 
+let inMemoryStudentsRepository: InMemoryStudentsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
@@ -12,10 +15,12 @@ let sut: ListQuestionCommentsUseCase
 
 describe('List recente questions', () => {
   beforeEach(() => {
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository()
-    inMemoryQuestionCommentsRepository =
-      new InMemoryQuestionCommentsRepository()
+    inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository(
+      inMemoryStudentsRepository,
+    )
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
     )
@@ -27,35 +32,67 @@ describe('List recente questions', () => {
 
   test('should be able to list recent questions', async () => {
     const question = makeQuestion()
+    const student = makeStudent({ name: 'John Doe' })
+
+    inMemoryStudentsRepository.create(student)
 
     inMemoryQuestionsRepository.create(question)
 
-    inMemoryQuestionCommentsRepository.create(
-      makeQuestionComment({
-        questionId: question.id,
-      }),
-    )
-    inMemoryQuestionCommentsRepository.create(
-      makeQuestionComment({
-        questionId: question.id,
-      }),
-    )
-    inMemoryQuestionCommentsRepository.create(
-      makeQuestionComment({
-        questionId: question.id,
-      }),
-    )
+    const comment1 = makeQuestionComment({
+      questionId: question.id,
+      authorId: student.id,
+    })
+    const comment2 = makeQuestionComment({
+      questionId: question.id,
+      authorId: student.id,
+    })
+    const comment3 = makeQuestionComment({
+      questionId: question.id,
+      authorId: student.id,
+    })
+
+    inMemoryQuestionCommentsRepository.create(comment1)
+    inMemoryQuestionCommentsRepository.create(comment2)
+    inMemoryQuestionCommentsRepository.create(comment3)
 
     const result = await sut.execute({
       page: 1,
       questionId: question.id.toString(),
     })
 
-    if (result.isRight()) expect(result.value?.questionComments).toHaveLength(3)
+    if (result.isRight()) {
+      console.log(result.value?.comments)
+      expect(result.value?.comments).toHaveLength(3)
+      expect(result.value?.comments).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            author: expect.objectContaining({
+              name: 'John Doe',
+            }),
+            commentId: comment1.id,
+          }),
+          expect.objectContaining({
+            author: expect.objectContaining({
+              name: 'John Doe',
+            }),
+            commentId: comment2.id,
+          }),
+          expect.objectContaining({
+            author: expect.objectContaining({
+              name: 'John Doe',
+            }),
+            commentId: comment3.id,
+          }),
+        ]),
+      )
+    }
   })
 
   test('should be able to list paginated question comments', async () => {
     const question = makeQuestion()
+    const student = makeStudent({ name: 'John Doe' })
+
+    inMemoryStudentsRepository.items.push(student)
 
     inMemoryQuestionsRepository.create(question)
 
@@ -63,6 +100,7 @@ describe('List recente questions', () => {
       inMemoryQuestionCommentsRepository.create(
         makeQuestionComment({
           questionId: question.id,
+          authorId: student.id,
         }),
       )
     }
@@ -71,6 +109,6 @@ describe('List recente questions', () => {
       page: 2,
       questionId: question.id.toString(),
     })
-    if (result.isRight()) expect(result.value?.questionComments).toHaveLength(2)
+    if (result.isRight()) expect(result.value?.comments).toHaveLength(2)
   })
 })

@@ -1,9 +1,9 @@
 import { Either, left, right } from '@/core/either'
-import { QuestionComment } from '../../enterprise/entities/question-comment'
 import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
 import { QuestionsRepository } from '../repositories/questions-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
+import { CommentWithAuthor } from '../../enterprise/entities/value-objects/comment-with-author'
 
 interface ListQuestionCommentsUseCaseRequest {
   questionId: string
@@ -13,7 +13,7 @@ interface ListQuestionCommentsUseCaseRequest {
 type ListQuestionCommentsUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    questionComments: QuestionComment[]
+    comments: CommentWithAuthor[]
   }
 >
 
@@ -34,11 +34,14 @@ export class ListQuestionCommentsUseCase {
       return left(new ResourceNotFoundError())
     }
 
-    const questionComments =
-      await this.questionCommentsRepository.findManyByQuestionId(questionId, {
-        page,
-      })
+    const comments =
+      await this.questionCommentsRepository.findManyByQuestionIdWithAuthor(
+        questionId,
+        {
+          page,
+        },
+      )
 
-    return right({ questionComments })
+    return right({ comments })
   }
 }
