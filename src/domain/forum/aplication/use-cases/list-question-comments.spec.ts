@@ -61,7 +61,6 @@ describe('List recente questions', () => {
     })
 
     if (result.isRight()) {
-      console.log(result.value?.comments)
       expect(result.value?.comments).toHaveLength(3)
       expect(result.value?.comments).toEqual(
         expect.arrayContaining([
