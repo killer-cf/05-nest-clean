@@ -49,6 +49,10 @@ export class QuestionDetails extends ValueObject<QuestionDetailsProps> {
     return this.props.bestAnswerId
   }
 
+  get createdAt() {
+    return this.props.createdAt
+  }
+
   get updatedAt() {
     return this.props.updatedAt
   }
