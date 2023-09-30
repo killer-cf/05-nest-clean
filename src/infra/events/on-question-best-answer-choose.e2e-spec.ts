@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -31,6 +32,8 @@ describe('On question best answer chosen (e2e)', () => {
     answerFactory = moduleRef.get(AnswerFactory)
     prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
+
+    DomainEvents.shouldRun = true
 
     await app.init()
   })
