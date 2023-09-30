@@ -1,4 +1,3 @@
-import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -9,7 +8,7 @@ import request from 'supertest'
 import { NotificationFactory } from 'test/factories/make-notification'
 import { StudentFactory } from 'test/factories/make-student'
 
-describe('Get question by slug (e2e)', () => {
+describe('Read notification (e2e)', () => {
   let app: INestApplication
   let studentFactory: StudentFactory
   let notificationFactory: NotificationFactory
@@ -33,9 +32,7 @@ describe('Get question by slug (e2e)', () => {
   })
 
   test('[PATCH] /notifications/:notificationId/read', async () => {
-    const user = await studentFactory.makePrismaStudent({
-      name: 'John Smith',
-    })
+    const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
